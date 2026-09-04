@@ -32,6 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Sidebar toggle
+  const sidebarToggleBtn = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('appSidebar');
+  if (sidebarToggleBtn && sidebar) {
+    sidebarToggleBtn.addEventListener('click', () => {
+      if (sidebar.style.display === 'none') {
+        sidebar.style.display = 'flex';
+      } else {
+        sidebar.style.display = 'none';
+      }
+    });
+  }
+
   // Auto-dismiss alerts after 4 seconds
   const alerts = document.querySelectorAll('.alert');
   alerts.forEach(alert => {

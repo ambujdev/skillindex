@@ -1,89 +1,204 @@
 {% extends 'base.html' %}
 
-{% block title %}Profile & Academics | Skill Index{% endblock %}
+{% block title %}Profile | Skill Index Portal{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1 class="page-title">Profile & Academic Records</h1>
-  <p class="page-subtitle">Manage your personal info, academic GPA, and bio.</p>
+<!-- Page Header -->
+<div class="page-header" style="text-align: center; margin-bottom: 28px;">
+  <h1 class="page-title" style="font-size: 1.8rem; font-weight: 800;">User Profile</h1>
+  <p class="page-subtitle">Personal information, academic background, and social links.</p>
 </div>
 
-<div class="card" style="max-width: 800px; margin: 0 auto;">
-  <form method="POST" action="{% url 'profile' %}">
-    {% csrf_token %}
-    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);">
-      <img src="{{ profile.avatar_url }}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
-      <div style="flex: 1;">
-        <label class="form-label">Avatar Image URL</label>
-        <input type="url" name="avatar_url" class="form-control" value="{{ profile.avatar_url }}">
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="form-group">
-        <label class="form-label">First Name</label>
-        <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Last Name</label>
-        <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <input type="email" name="email" class="form-control" value="{{ user.email }}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Phone Number</label>
-        <input type="text" name="phone" class="form-control" value="{{ profile.phone }}">
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="form-group">
-        <label class="form-label">Institution / College</label>
-        <input type="text" name="institution_or_company" class="form-control" value="{{ profile.institution_or_company }}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Department / Major</label>
-        <input type="text" name="department" class="form-control" value="{{ profile.department }}">
-      </div>
-    </div>
-
-    {% if profile.role == 'STUDENT' %}
-    <div class="grid-3">
-      <div class="form-group">
-        <label class="form-label">Degree</label>
-        <input type="text" name="degree" class="form-control" value="{{ academic.degree }}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">CGPA (out of 10)</label>
-        <input type="number" step="0.01" name="cgpa" class="form-control" value="{{ academic.cgpa }}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Passing Year</label>
-        <input type="number" name="passing_year" class="form-control" value="{{ academic.passing_year }}">
-      </div>
-    </div>
-    {% endif %}
-
-    <div class="form-group">
-      <label class="form-label">Location</label>
-      <input type="text" name="location" class="form-control" value="{{ profile.location }}">
-    </div>
-
-    <div class="form-group">
-      <label class="form-label">Professional Bio / Summary</label>
-      <textarea name="bio" class="form-control" rows="4">{{ profile.bio }}</textarea>
-    </div>
-
-    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
-      <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
-        <i class="fa-solid fa-save"></i> Save Profile Changes
+<!-- Main Profile Card (Designed to strictly match Handwritten Sketch Plan) -->
+<div class="card" style="max-width: 640px; margin: 0 auto; padding: 36px 32px; border-radius: 20px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); background: #ffffff;">
+  
+  <!-- Top Center Photo with Camera Icon Overlay -->
+  <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 24px; position: relative;">
+    <div style="position: relative; display: inline-block;">
+      <img src="{{ profile.avatar_url }}" alt="{{ profile.full_name }}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #e0e7ff; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.15);" id="profileAvatarImg">
+      
+      <!-- Camera Icon Button to Change/Add Photo -->
+      <button type="button" data-modal-target="avatarModal" style="position: absolute; bottom: 4px; right: 4px; width: 36px; height: 36px; border-radius: 50%; background: #4f46e5; color: white; border: 3px solid #ffffff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s;" title="Add / Change Photo">
+        <i class="fa-solid fa-camera"></i>
       </button>
     </div>
-  </form>
+
+    <!-- Name, Branch/Year, College (Centered below photo) -->
+    <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-top: 14px; margin-bottom: 2px;">{{ profile.full_name }}</h2>
+    <p style="font-size: 0.95rem; font-weight: 600; color: #4f46e5; margin-bottom: 2px;">{{ profile.branch_and_year|default:'Computer Science & Engineering • 4th Year' }}</p>
+    <p style="font-size: 0.875rem; color: #64748b; font-weight: 500;"><i class="fa-solid fa-building-columns" style="color: #64748b; margin-right: 4px;"></i> {{ profile.institution_or_company|default:'Delhi Technological University' }}</p>
+  </div>
+
+  <!-- About Me Box (As drawn in wireframe) -->
+  <div style="margin-bottom: 28px;">
+    <label style="display: block; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 8px;">About me (for user)</label>
+    <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px; font-size: 0.9rem; color: #334155; line-height: 1.6; min-height: 70px;">
+      {{ profile.bio|default:'Passionate Computer Science student specializing in Full-Stack Web Development, PostgreSQL database systems, and AI applications.' }}
+    </div>
+  </div>
+
+  <!-- Contact Details Section (Mail ID, Contact No., LinkedIn/GitHub) -->
+  <div style="margin-bottom: 32px;">
+    <h3 style="font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 14px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; gap: 8px;">
+      <i class="fa-solid fa-address-card" style="color: #4f46e5;"></i> Contact details
+    </h3>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <!-- Mail ID -->
+      <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+          <i class="fa-solid fa-envelope"></i>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-size: 0.725rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Mail ID</span>
+          <span style="font-size: 0.9rem; font-weight: 700; color: #0f172a;">{{ user.email|default:'ananya@dtu.ac.in' }}</span>
+        </div>
+      </div>
+
+      <!-- Contact No. -->
+      <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div style="width: 36px; height: 36px; border-radius: 8px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+          <i class="fa-solid fa-phone"></i>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-size: 0.725rem; font-weight: 700; color: #64748b; text-transform: uppercase;">Contact No.</span>
+          <span style="font-size: 0.9rem; font-weight: 700; color: #0f172a;">{{ profile.phone|default:'+91 98765 43210' }}</span>
+        </div>
+      </div>
+
+      <!-- LinkedIn / Username -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: #e0e7ff; color: #4f46e5; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+            <i class="fa-brands fa-linkedin"></i>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.725rem; font-weight: 700; color: #64748b; text-transform: uppercase;">LinkedIn / Username</span>
+            <span style="font-size: 0.9rem; font-weight: 700; color: #0f172a;">{{ profile.linkedin_url|default:'https://linkedin.com/in/ananyasharma' }}</span>
+          </div>
+        </div>
+        <a href="{{ profile.linkedin_url|default:'https://linkedin.com/in/ananyasharma' }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" style="border-color: #4f46e5; color: #4f46e5;">
+          Open Link <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </div>
+
+      <!-- GitHub / Username -->
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: #f1f5f9; color: #0f172a; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+            <i class="fa-brands fa-github"></i>
+          </div>
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-size: 0.725rem; font-weight: 700; color: #64748b; text-transform: uppercase;">GitHub / Username</span>
+            <span style="font-size: 0.9rem; font-weight: 700; color: #0f172a;">{{ profile.github_url|default:'https://github.com/ananyasharma' }}</span>
+          </div>
+        </div>
+        <a href="{{ profile.github_url|default:'https://github.com/ananyasharma' }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" style="border-color: #0f172a; color: #0f172a;">
+          Open Tab <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Button: Edit Profile -->
+  <div style="display: flex; justify-content: center;">
+    <button type="button" class="btn btn-primary" data-modal-target="editProfileModal" style="padding: 12px 36px; font-size: 0.95rem; font-weight: 700; border-radius: 12px; box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);">
+      <i class="fa-solid fa-pen-to-square"></i> Edit profile
+    </button>
+  </div>
+</div>
+
+<!-- Modal 1: Edit Profile Form -->
+<div class="modal-backdrop" id="editProfileModal">
+  <div class="modal-content" style="max-width: 540px;">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-user-pen" style="color: #4f46e5; margin-right: 8px;"></i> Edit Profile Information</h3>
+      <button class="btn btn-sm btn-outline" data-modal-close>&times;</button>
+    </div>
+
+    <form method="POST" action="{% url 'profile' %}">
+      {% csrf_token %}
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Branch & Year</label>
+        <input type="text" name="branch_and_year" class="form-control" value="{{ profile.branch_and_year|default:'Computer Science & Engineering • 4th Year' }}">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">College / Institution</label>
+        <input type="text" name="institution_or_company" class="form-control" value="{{ profile.institution_or_company|default:'Delhi Technological University' }}">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="form-group">
+          <label class="form-label">Mail ID</label>
+          <input type="email" name="email" class="form-control" value="{{ user.email }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contact No.</label>
+          <input type="text" name="phone" class="form-control" value="{{ profile.phone|default:'+91 98765 43210' }}">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <div class="form-group">
+          <label class="form-label">LinkedIn URL</label>
+          <input type="text" name="linkedin_url" class="form-control" value="{{ profile.linkedin_url|default:'https://linkedin.com/in/ananyasharma' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">GitHub URL</label>
+          <input type="text" name="github_url" class="form-control" value="{{ profile.github_url|default:'https://github.com/ananyasharma' }}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">About me (Bio)</label>
+        <textarea name="bio" class="form-control" rows="3">{{ profile.bio }}</textarea>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Click Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal 2: Change Profile Photo (Triggered by Camera Icon) -->
+<div class="modal-backdrop" id="avatarModal">
+  <div class="modal-content">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-camera" style="color: #4f46e5; margin-right: 8px;"></i> Change Profile Photo</h3>
+      <button class="btn btn-sm btn-outline" data-modal-close>&times;</button>
+    </div>
+
+    <form method="POST" action="{% url 'profile' %}">
+      {% csrf_token %}
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{{ profile.avatar_url }}" alt="Preview" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid #e0e7ff; margin-bottom: 12px;">
+        <p style="font-size: 0.85rem; color: #64748b;">Select or paste image file URL to update your profile photo.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Profile Image URL</label>
+        <input type="url" name="avatar_url" class="form-control" value="{{ profile.avatar_url }}" required placeholder="https://example.com/photo.jpg">
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Select & Update Photo</button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
