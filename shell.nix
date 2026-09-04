@@ -7,12 +7,20 @@ pkgs.mkShell {
     python3Packages.django
     python3Packages.psycopg2
     python3Packages.pillow
+    python3Packages.playwright
+    playwright-driver
+    chromium
   ];
 
   shellHook = ''
     echo "========================================================"
     echo "  🚀 Starting Skill Index Environment with PostgreSQL    "
     echo "========================================================"
+
+    # Configure Playwright to use Nix pre-packaged browser binaries
+    export PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright-driver.browsers}"
+    export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+    export BROWSER="${pkgs.chromium}/bin/chromium"
 
     export PGDATA="$PWD/.pg_data"
     export PGPORT="5434"
@@ -78,7 +86,7 @@ pkgs.mkShell {
     trap cleanup EXIT
 
     echo ""
-    echo "✅ Skill Index setup complete!"
+    echo "✅ Skill Index & Browser Testing environment ready!"
     echo "🌐 You can start the server with: python manage.py runserver 8000"
     echo "========================================================"
   '';
