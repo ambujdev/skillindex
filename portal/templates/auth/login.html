@@ -3,20 +3,22 @@
 {% block title %}Login | Skill Index Portal{% endblock %}
 
 {% block auth_content %}
-<div style="width: 100%; max-width: 440px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-radius: 16px; padding: 36px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
+<div style="width: 100%; max-width: 420px; background: #ffffff; border-radius: 20px; padding: 36px 30px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1); position: relative; box-sizing: border-box; color: #0f172a;">
+  
+  <!-- Brand Logo & Header -->
   <div style="text-align: center; margin-bottom: 28px;">
-    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin-bottom: 12px;">
+    <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.5rem; margin-bottom: 12px; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);">
       <i class="fa-solid fa-layer-group"></i>
     </div>
-    <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a;">Skill Index Portal</h2>
-    <p style="font-size: 0.875rem; color: #64748b; margin-top: 4px;">Academia-Industry Collaboration & Placement Portal</p>
+    <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;">Skill Index Portal</h2>
+    <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px; font-weight: 500;">Academia-Industry Collaboration & Placement Portal</p>
   </div>
 
   {% if messages %}
-  <div style="margin-bottom: 16px;">
+  <div style="margin-bottom: 20px;">
     {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      {{ message }}
+    <div class="alert alert-{{ message.tags }}" style="padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 8px;">
+      <span>{{ message }}</span>
     </div>
     {% endfor %}
   </div>
@@ -24,48 +26,173 @@
 
   <form method="POST" action="{% url 'login' %}">
     {% csrf_token %}
-    <div class="form-group">
-      <label class="form-label">Username</label>
-      <input type="text" name="username" class="form-control" placeholder="Enter username (e.g. student1)" required id="usernameInput">
+
+    <!-- Username Field -->
+    <div style="margin-bottom: 20px; position: relative;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <label style="font-size: 0.85rem; font-weight: 700; color: #334155; display: flex; align-items: center; gap: 6px; margin: 0;">
+          <i class="fa-regular fa-user" style="color: #64748b;"></i> Username
+        </label>
+
+        <!-- 3-Bot Demo Trigger -->
+        <div style="position: relative;">
+          <button type="button" id="demoBotBtn" style="display: inline-flex; align-items: center; gap: 6px; background: #e0e7ff; border: 1px solid #c7d2fe; padding: 4px 10px; border-radius: 20px; cursor: pointer; transition: all 0.2s;" title="Quick Auto-Fill Demo Accounts">
+            <span style="display: inline-flex; gap: 2px; color: #4f46e5; font-size: 0.8rem;">
+              <i class="fa-solid fa-robot"></i>
+              <i class="fa-solid fa-robot"></i>
+              <i class="fa-solid fa-robot"></i>
+            </span>
+            <span style="font-size: 0.7rem; font-weight: 800; color: #3730a3; text-transform: uppercase; letter-spacing: 0.04em;">Demo Fill</span>
+          </button>
+
+          <!-- Floating 3-Bot Popover Menu -->
+          <div id="demoBotPopover" style="display: none; position: absolute; right: 0; top: 32px; width: 250px; background: #ffffff; border-radius: 14px; padding: 8px; box-shadow: 0 15px 30px rgba(15, 23, 42, 0.25), 0 0 0 1px #e2e8f0; z-index: 1000; flex-direction: column; gap: 4px;">
+            <div style="font-size: 0.7rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 8px; border-bottom: 1px solid #f1f5f9;">
+              <i class="fa-solid fa-bolt" style="color: #f59e0b; margin-right: 4px;"></i> Select Demo Account
+            </div>
+
+            <button type="button" onclick="fillDemo('student1', 'password123')" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border-radius: 8px; border: none; background: #f8fafc; cursor: pointer; text-align: left; transition: background 0.2s;">
+              <div style="width: 32px; height: 32px; border-radius: 6px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0;">
+                <i class="fa-solid fa-user-graduate"></i>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Student (Ananya)</span>
+                <span style="font-size: 0.7rem; color: #64748b;">student1 • B.Tech CS</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="fillDemo('recruiter1', 'password123')" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border-radius: 8px; border: none; background: #f8fafc; cursor: pointer; text-align: left; transition: background 0.2s;">
+              <div style="width: 32px; height: 32px; border-radius: 6px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0;">
+                <i class="fa-solid fa-building"></i>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Industry Recruiter</span>
+                <span style="font-size: 0.7rem; color: #64748b;">recruiter1 • Google</span>
+              </div>
+            </button>
+
+            <button type="button" onclick="fillDemo('admin1', 'password123')" style="display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px; border-radius: 8px; border: none; background: #f8fafc; cursor: pointer; text-align: left; transition: background 0.2s;">
+              <div style="width: 32px; height: 32px; border-radius: 6px; background: #f3e8ff; color: #9333ea; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0;">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <div style="display: flex; flex-direction: column;">
+                <span style="font-size: 0.8rem; font-weight: 700; color: #0f172a;">Academia Head</span>
+                <span style="font-size: 0.7rem; color: #64748b;">admin1 • DTU</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Wrapper -->
+      <div style="position: relative; display: flex; align-items: center;">
+        <i class="fa-solid fa-user" style="position: absolute; left: 14px; color: #94a3b8; font-size: 0.9rem; pointer-events: none;"></i>
+        <input type="text" name="username" id="usernameInput" placeholder="e.g. student1" required autocomplete="username" style="width: 100%; padding: 12px 14px 12px 40px; background-color: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; color: #0f172a; outline: none; font-family: inherit; box-sizing: border-box; transition: all 0.2s;">
+      </div>
     </div>
 
-    <div class="form-group">
-      <label class="form-label">Password</label>
-      <input type="password" name="password" class="form-control" placeholder="••••••••" required id="passwordInput">
+    <!-- Password Field -->
+    <div style="margin-bottom: 24px;">
+      <label style="font-size: 0.85rem; font-weight: 700; color: #334155; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+        <i class="fa-solid fa-lock" style="color: #64748b;"></i> Password
+      </label>
+
+      <div style="position: relative; display: flex; align-items: center;">
+        <i class="fa-solid fa-key" style="position: absolute; left: 14px; color: #94a3b8; font-size: 0.9rem; pointer-events: none;"></i>
+        <input type="password" name="password" id="passwordInput" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; padding: 12px 40px 12px 40px; background-color: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; color: #0f172a; outline: none; font-family: inherit; box-sizing: border-box; transition: all 0.2s;">
+        <button type="button" id="togglePasswordBtn" style="position: absolute; right: 12px; background: none; border: none; color: #94a3b8; cursor: pointer; padding: 4px; font-size: 0.95rem;" title="Toggle password visibility">
+          <i class="fa-regular fa-eye" id="togglePasswordIcon"></i>
+        </button>
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; margin-top: 8px; font-weight: 600;">
-      <i class="fa-solid fa-right-to-bracket"></i> Sign In
+    <button type="submit" style="width: 100%; padding: 13px; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; font-weight: 700; font-size: 0.95rem; border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4); transition: all 0.2s;">
+      <span>Sign In to Portal</span>
+      <i class="fa-solid fa-arrow-right"></i>
     </button>
   </form>
 
-  <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-    <p style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 10px; text-align: center;">Quick Demo Login</p>
-    <div style="display: flex; flex-direction: column; gap: 8px;">
-      <button onclick="fillDemo('student1', 'password123')" class="btn btn-outline btn-block" style="justify-content: space-between; font-size: 0.8rem;">
-        <span><i class="fa-solid fa-user-graduate" style="color: #10b981;">="margin-right: 6px;"></i> Student (Ananya)</span>
-        <span class="badge badge-success">Demo</span>
-      </button>
-      <button onclick="fillDemo('recruiter1', 'password123')" class="btn btn-outline btn-block" style="justify-content: space-between; font-size: 0.8rem;">
-        <span><i class="fa-solid fa-building" style="color: #3b82f6; margin-right: 6px;"></i> Industry Recruiter (Google)</span>
-        <span class="badge badge-info">Demo</span>
-      </button>
-      <button onclick="fillDemo('admin1', 'password123')" class="btn btn-outline btn-block" style="justify-content: space-between; font-size: 0.8rem;">
-        <span><i class="fa-solid fa-graduation-cap" style="color: #8b5cf6; margin-right: 6px;"></i> Academia Head (DTU)</span>
-        <span class="badge badge-warning">Demo</span>
-      </button>
-    </div>
-  </div>
-
-  <p style="text-align: center; margin-top: 24px; font-size: 0.85rem; color: #64748b;">
-    Don't have an account? <a href="{% url 'register' %}" style="color: #10b981; font-weight: 600; text-decoration: none;">Register Now</a>
+  <p style="text-align: center; margin-top: 24px; font-size: 0.85rem; color: #64748b; margin-bottom: 0;">
+    Don't have an account? <a href="{% url 'register' %}" style="color: #10b981; font-weight: 700; text-decoration: none;">Register Now</a>
   </p>
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const botBtn = document.getElementById('demoBotBtn');
+  const popover = document.getElementById('demoBotPopover');
+  const togglePassBtn = document.getElementById('togglePasswordBtn');
+  const passInput = document.getElementById('passwordInput');
+  const passIcon = document.getElementById('togglePasswordIcon');
+  const userInput = document.getElementById('usernameInput');
+
+  // Focus glow effects
+  [userInput, passInput].forEach(input => {
+    if (input) {
+      input.addEventListener('focus', () => {
+        input.style.borderColor = '#10b981';
+        input.style.backgroundColor = '#ffffff';
+        input.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.15)';
+      });
+      input.addEventListener('blur', () => {
+        input.style.borderColor = '#cbd5e1';
+        input.style.backgroundColor = '#f8fafc';
+        input.style.boxShadow = 'none';
+      });
+    }
+  });
+
+  // Toggle 3-Bot Popover Menu
+  if (botBtn && popover) {
+    botBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (popover.style.display === 'none' || popover.style.display === '') {
+        popover.style.display = 'flex';
+      } else {
+        popover.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!popover.contains(e.target) && e.target !== botBtn) {
+        popover.style.display = 'none';
+      }
+    });
+  }
+
+  // Toggle Password Visibility
+  if (togglePassBtn && passInput) {
+    togglePassBtn.addEventListener('click', function() {
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        passIcon.classList.remove('fa-eye');
+        passIcon.classList.add('fa-eye-slash');
+      } else {
+        passInput.type = 'password';
+        passIcon.classList.remove('fa-eye-slash');
+        passIcon.classList.add('fa-eye');
+      }
+    });
+  }
+});
+
 function fillDemo(username, password) {
-  document.getElementById('usernameInput').value = username;
-  document.getElementById('passwordInput').value = password;
+  const usernameField = document.getElementById('usernameInput');
+  const passwordField = document.getElementById('passwordInput');
+  const popover = document.getElementById('demoBotPopover');
+
+  if (usernameField && passwordField) {
+    usernameField.value = username;
+    passwordField.value = password;
+
+    usernameField.focus();
+    usernameField.style.borderColor = '#10b981';
+    passwordField.style.borderColor = '#10b981';
+  }
+
+  if (popover) {
+    popover.style.display = 'none';
+  }
 }
 </script>
 {% endblock %}
