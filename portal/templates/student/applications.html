@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}My Applications | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">My Job & Internship Applications</h1>
+  <p class="page-subtitle">Track the status of your applications submitted to industry partners.</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title"><i class="fa-solid fa-paper-plane" style="color: var(--primary); margin-right: 8px;"></i> Application Status History</h3>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for app in applications %}
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--border-color);">
+      <div style="display: flex; gap: 16px; align-items: center;">
+        <img src="{{ app.job.company_logo }}" alt="Logo" style="width: 48px; height: 48px; border-radius: 8px; object-fit: contain;">
+        <div>
+          <h4 style="font-size: 1.05rem; font-weight: 700; color: #0f172a;">{{ app.job.title }}</h4>
+          <p style="font-size: 0.85rem; color: #3b82f6; font-weight: 600;">{{ app.job.company_name }} • {{ app.job.location }}</p>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Applied on {{ app.applied_at|date:"M d, Y" }}</span>
+        </div>
+      </div>
+
+      <div style="text-align: right;">
+        {% if app.status == 'ACCEPTED' %}
+        <span class="badge badge-success" style="font-size: 0.85rem;"><i class="fa-solid fa-circle-check"></i> Accepted / Offered</span>
+        {% elif app.status == 'UNDER_REVIEW' %}
+        <span class="badge badge-info" style="font-size: 0.85rem;"><i class="fa-solid fa-clock"></i> Under Review</span>
+        {% elif app.status == 'INTERVIEW' %}
+        <span class="badge badge-warning" style="font-size: 0.85rem;"><i class="fa-solid fa-calendar-check"></i> Interview Scheduled</span>
+        {% else %}
+        <span class="badge badge-secondary" style="font-size: 0.85rem;">{{ app.get_status_display }}</span>
+        {% endif %}
+        
+        {% if app.recruiter_notes %}
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; max-width: 250px;">
+          Note: "{{ app.recruiter_notes }}"
+        </p>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <p style="font-size: 0.875rem; color: var(--text-muted);">You have not applied for any opportunities yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

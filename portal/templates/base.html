@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Skill Index | Academia-Industry Collaboration{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="{% url 'dashboard' %}" class="sidebar-brand">
+          <div class="logo-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <span>SkillIndex</span>
+        </a>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <i class="fa-solid fa-chart-pie"></i> Dashboard
+          </a>
+        </li>
+
+        {% if user.profile.role == 'STUDENT' %}
+        <li>
+          <a href="{% url 'profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <i class="fa-solid fa-user-graduate"></i> Profile & Academics
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'skills' %}" class="nav-item {% if request.resolver_match.url_name == 'skills' %}active{% endif %}">
+            <i class="fa-solid fa-sliders"></i> Skill Mapping
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'job_list' %}" class="nav-item {% if request.resolver_match.url_name == 'job_list' or request.resolver_match.url_name == 'job_detail' %}active{% endif %}">
+            <i class="fa-solid fa-briefcase"></i> Internships & Jobs
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'my_applications' %}" class="nav-item {% if request.resolver_match.url_name == 'my_applications' %}active{% endif %}">
+            <i class="fa-solid fa-paper-plane"></i> My Applications
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'resume' %}" class="nav-item {% if request.resolver_match.url_name == 'resume' %}active{% endif %}">
+            <i class="fa-solid fa-file-lines"></i> Resume Builder
+          </a>
+        </li>
+        {% endif %}
+
+        {% if user.profile.role == 'INDUSTRY' %}
+        <li>
+          <a href="{% url 'job_create' %}" class="nav-item {% if request.resolver_match.url_name == 'job_create' %}active{% endif %}">
+            <i class="fa-solid fa-plus-circle"></i> Post Opportunity
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'applicants' %}" class="nav-item {% if request.resolver_match.url_name == 'applicants' %}active{% endif %}">
+            <i class="fa-solid fa-users"></i> Applicant Pipeline
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'job_list' %}" class="nav-item {% if request.resolver_match.url_name == 'job_list' %}active{% endif %}">
+            <i class="fa-solid fa-list-check"></i> Manage Listings
+          </a>
+        </li>
+        {% endif %}
+
+        {% if user.profile.role == 'ACADEMIA' %}
+        <li>
+          <a href="{% url 'applicants' %}" class="nav-item {% if request.resolver_match.url_name == 'applicants' %}active{% endif %}">
+            <i class="fa-solid fa-users-rectangle"></i> Student Applications
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'job_list' %}" class="nav-item {% if request.resolver_match.url_name == 'job_list' %}active{% endif %}">
+            <i class="fa-solid fa-building-columns"></i> Industry Drives
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+
+      <div class="sidebar-footer">
+        <a href="{% url 'logout' %}" class="nav-item" style="color: #ef4444;">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <form action="{% url 'job_list' %}" method="GET" class="search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" name="q" placeholder="Search skills, opportunities, candidates..." value="{{ request.GET.q }}">
+        </form>
+
+        <div class="topbar-actions">
+          <a href="{% url 'profile' %}" class="user-profile-pill">
+            <img src="{{ user.profile.avatar_url }}" alt="Avatar" class="user-avatar">
+            <div class="user-info">
+              <span class="user-name">{{ user.profile.full_name }}</span>
+              <span class="user-role">{{ user.profile.get_role_display }}</span>
+            </div>
+          </a>
+        </div>
+      </header>
+
+      <main class="content-area">
+        {% if messages %}
+        <div class="messages-container">
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            <span>{{ message }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+  {% else %}
+  <div style="min-height: 100vh; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: center; justify-content: center; padding: 20px;">
+    {% block auth_content %}{% endblock %}
+  </div>
+  {% endif %}
+
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

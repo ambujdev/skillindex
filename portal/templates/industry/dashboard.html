@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Industry Dashboard | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+  <div>
+    <h1 class="page-title">Industry Partner Portal</h1>
+    <p class="page-subtitle">Post opportunities, search candidates by verified skills, and review applicants.</p>
+  </div>
+  <a href="{% url 'job_create' %}" class="btn btn-primary">
+    <i class="fa-solid fa-plus-circle"></i> Post New Internship / Placement
+  </a>
+</div>
+
+<!-- Stats -->
+<div class="grid-4">
+  <div class="stat-card stat-blue">
+    <span class="stat-label">Active Postings</span>
+    <span class="stat-value">{{ posted_jobs.count }}</span>
+    <span class="stat-subtext">Open Drives</span>
+  </div>
+
+  <div class="stat-card stat-purple">
+    <span class="stat-label">Total Applicants</span>
+    <span class="stat-value">{{ total_applicants }}</span>
+    <span class="stat-subtext">Received</span>
+  </div>
+
+  <div class="stat-card stat-amber">
+    <span class="stat-label">Under Review</span>
+    <span class="stat-value">{{ under_review }}</span>
+    <span class="stat-subtext">Candidates</span>
+  </div>
+
+  <div class="stat-card stat-green">
+    <span class="stat-label">Offered / Shortlisted</span>
+    <span class="stat-value">{{ shortlisted }}</span>
+    <span class="stat-subtext">Accepted</span>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- My Posted Opportunities -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-briefcase" style="color: #3b82f6; margin-right: 8px;"></i> Active Opportunities Posted</h3>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      {% for job in posted_jobs %}
+      <div style="padding: 14px; background: #f8fafc; border-radius: 10px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h4 style="font-size: 1rem; font-weight: 700; color: #0f172a;">{{ job.title }}</h4>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">{{ job.get_opportunity_type_display }} • {{ job.location }} • {{ job.stipend_or_salary }}</span>
+          <div style="margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap;">
+            {% for sk in job.required_skills.all %}
+            <span class="badge badge-info" style="font-size: 0.7rem;">{{ sk.name }}</span>
+            {% endfor %}
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <a href="{% url 'applicants_by_job' job.id %}" class="btn btn-sm btn-outline" style="border-color: #3b82f6; color: #3b82f6;">
+            {{ job.applicant_count }} Applicants <i class="fa-solid fa-chevron-right"></i>
+          </a>
+        </div>
+      </div>
+      {% empty %}
+      <p style="font-size: 0.875rem; color: var(--text-muted);">No postings yet. Click "+ Post New Opportunity" to get started.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Candidate Skill Search & Discovery -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-user-check" style="color: var(--primary); margin-right: 8px;"></i> Candidate Skill Discovery</h3>
+    </div>
+
+    <form method="GET" style="margin-bottom: 16px;">
+      <div style="display: flex; gap: 8px;">
+        <input type="text" name="q" class="form-control" placeholder="Search candidates by skill (e.g. Python, SQL, C++)" value="{{ query }}">
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-search"></i> Search</button>
+      </div>
+    </form>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto;">
+      {% for cand in candidates %}
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border-radius: 8px; background: #f8fafc; border: 1px solid var(--border-color);">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <img src="{{ cand.avatar_url }}" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+          <div>
+            <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a;">{{ cand.full_name }}</h4>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">{{ cand.institution_or_company }} • CGPA {{ cand.academic_record.cgpa|default:'8.5' }}</p>
+          </div>
+        </div>
+        <span class="badge badge-success">Verified Candidate</span>
+      </div>
+      {% empty %}
+      <p style="font-size: 0.875rem; color: var(--text-muted);">No candidates matching your query.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

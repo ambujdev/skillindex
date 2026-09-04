@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile & Academics | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Profile & Academic Records</h1>
+  <p class="page-subtitle">Manage your personal info, academic GPA, and bio.</p>
+</div>
+
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+  <form method="POST" action="{% url 'profile' %}">
+    {% csrf_token %}
+    <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color);">
+      <img src="{{ profile.avatar_url }}" alt="Avatar" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
+      <div style="flex: 1;">
+        <label class="form-label">Avatar Image URL</label>
+        <input type="url" name="avatar_url" class="form-control" value="{{ profile.avatar_url }}">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">First Name</label>
+        <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last Name</label>
+        <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" name="email" class="form-control" value="{{ user.email }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="text" name="phone" class="form-control" value="{{ profile.phone }}">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="form-group">
+        <label class="form-label">Institution / College</label>
+        <input type="text" name="institution_or_company" class="form-control" value="{{ profile.institution_or_company }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Department / Major</label>
+        <input type="text" name="department" class="form-control" value="{{ profile.department }}">
+      </div>
+    </div>
+
+    {% if profile.role == 'STUDENT' %}
+    <div class="grid-3">
+      <div class="form-group">
+        <label class="form-label">Degree</label>
+        <input type="text" name="degree" class="form-control" value="{{ academic.degree }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">CGPA (out of 10)</label>
+        <input type="number" step="0.01" name="cgpa" class="form-control" value="{{ academic.cgpa }}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Passing Year</label>
+        <input type="number" name="passing_year" class="form-control" value="{{ academic.passing_year }}">
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="form-group">
+      <label class="form-label">Location</label>
+      <input type="text" name="location" class="form-control" value="{{ profile.location }}">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Professional Bio / Summary</label>
+      <textarea name="bio" class="form-control" rows="4">{{ profile.bio }}</textarea>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+      <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
+        <i class="fa-solid fa-save"></i> Save Profile Changes
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

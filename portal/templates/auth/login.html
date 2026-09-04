@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | Skill Index Portal{% endblock %}
+
+{% block auth_content %}
+<div style="width: 100%; max-width: 440px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-radius: 16px; padding: 36px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
+  <div style="text-align: center; margin-bottom: 28px;">
+    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; margin-bottom: 12px;">
+      <i class="fa-solid fa-layer-group"></i>
+    </div>
+    <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a;">Skill Index Portal</h2>
+    <p style="font-size: 0.875rem; color: #64748b; margin-top: 4px;">Academia-Industry Collaboration & Placement Portal</p>
+  </div>
+
+  {% if messages %}
+  <div style="margin-bottom: 16px;">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" placeholder="Enter username (e.g. student1)" required id="usernameInput">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="••••••••" required id="passwordInput">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; margin-top: 8px; font-weight: 600;">
+      <i class="fa-solid fa-right-to-bracket"></i> Sign In
+    </button>
+  </form>
+
+  <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+    <p style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 10px; text-align: center;">Quick Demo Login</p>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <button onclick="fillDemo('student1', 'password123')" class="btn btn-outline btn-block" style="justify-content: space-between; font-size: 0.8rem;">
+        <span><i class="fa-solid fa-user-graduate" style="color: #10b981;">="margin-right: 6px;"></i> Student (Ananya)</span>
+        <span class="badge badge-success">Demo</span>
+      </button>
+      <button onclick="fillDemo('recruiter1', 'password123')" class="btn btn-outline btn-block" style="justify-content: space-between; font-size: 0.8rem;">
+        <span><i class="fa-solid fa-building" style="color: #3b82f6; margin-right: 6px;"></i> Industry Recruiter (Google)</span>
+        <span class="badge badge-info">Demo</span>
+      </button>
+      <button onclick="fillDemo('admin1', 'password123')" class="btn btn-outline btn-block" style="justify-content: space-between; font-size: 0.8rem;">
+        <span><i class="fa-solid fa-graduation-cap" style="color: #8b5cf6; margin-right: 6px;"></i> Academia Head (DTU)</span>
+        <span class="badge badge-warning">Demo</span>
+      </button>
+    </div>
+  </div>
+
+  <p style="text-align: center; margin-top: 24px; font-size: 0.85rem; color: #64748b;">
+    Don't have an account? <a href="{% url 'register' %}" style="color: #10b981; font-weight: 600; text-decoration: none;">Register Now</a>
+  </p>
+</div>
+
+<script>
+function fillDemo(username, password) {
+  document.getElementById('usernameInput').value = username;
+  document.getElementById('passwordInput').value = password;
+}
+</script>
+{% endblock %}

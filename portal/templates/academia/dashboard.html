@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Academia Analytics | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Institutional Skill Mapping & Placement Analytics</h1>
+  <p class="page-subtitle">College & Placement Directorate Insights • {{ profile.institution_or_company|default:'Delhi Technological University' }}</p>
+</div>
+
+<!-- 4 Key Stat Cards -->
+<div class="grid-4">
+  <div class="stat-card stat-green">
+    <span class="stat-label">Placement Rate</span>
+    <span class="stat-value">{{ placement_rate }}%</span>
+    <span class="stat-subtext">{{ placed_students }} of {{ total_students }} Students Placed</span>
+  </div>
+
+  <div class="stat-card stat-purple">
+    <span class="stat-label">Average Student CGPA</span>
+    <span class="stat-value">{{ avg_cgpa }}</span>
+    <span class="stat-subtext">Across All Departments</span>
+  </div>
+
+  <div class="stat-card stat-blue">
+    <span class="stat-label">Active Industry Partners</span>
+    <span class="stat-value">{{ total_industry_partners }}</span>
+    <span class="stat-subtext">Recruiting On-Campus</span>
+  </div>
+
+  <div class="stat-card stat-amber">
+    <span class="stat-label">Open Placement Drives</span>
+    <span class="stat-value">{{ total_jobs }}</span>
+    <span class="stat-subtext">Internships & Placements</span>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- Top Demanded Industry Skills vs Curriculum -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-fire" style="color: #ef4444; margin-right: 8px;"></i> Top Demanded Skills by Industry</h3>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Skills most frequently required in active recruiter job postings:</p>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      {% for sk in top_demanded_skills %}
+      <div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px;">
+          <span>{{ sk.name }}</span>
+          <span style="color: var(--primary);">{{ sk.job_count }} Drive Postings</span>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-progress progress-purple" style="width: {% if sk.job_count %}{% widthratio sk.job_count 5 100 %}{% else %}60{% endif %}%;"></div>
+        </div>
+      </div>
+      {% empty %}
+      <p style="font-size: 0.875rem; color: var(--text-muted);">No job requirements recorded.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Student Skill Pool Distribution -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-users-gear" style="color: var(--primary); margin-right: 8px;"></i> Student Body Skill Distribution</h3>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Most common skills verified across registered student profiles:</p>
+
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      {% for sk in student_skill_stats %}
+      <div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 600; margin-bottom: 4px;">
+          <span>{{ sk.name }}</span>
+          <span style="color: #3b82f6;">{{ sk.student_count }} Students Verified</span>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-progress progress-green" style="width: {% if sk.student_count %}{% widthratio sk.student_count 10 100 %}{% else %}70{% endif %}%;"></div>
+        </div>
+      </div>
+      {% empty %}
+      <p style="font-size: 0.875rem; color: var(--text-muted);">No student skills registered.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

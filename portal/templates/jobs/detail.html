@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ job.title }} | Skill Index{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+  <div class="card" style="margin-bottom: 24px;">
+    <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
+      <img src="{{ job.company_logo }}" alt="Logo" style="width: 64px; height: 64px; border-radius: 12px; object-fit: contain;">
+      <div style="flex: 1;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <h1 style="font-size: 1.5rem; font-weight: 800; color: #0f172a;">{{ job.title }}</h1>
+          <span class="badge badge-info" style="font-size: 0.85rem;">{{ job.get_opportunity_type_display }}</span>
+        </div>
+        <p style="font-size: 1rem; color: #3b82f6; font-weight: 600;">{{ job.company_name }}</p>
+        
+        <div style="display: flex; gap: 20px; font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+          <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+          <span><i class="fa-solid fa-money-bill-wave"></i> {{ job.stipend_or_salary }}</span>
+          <span><i class="fa-solid fa-graduation-cap"></i> Min CGPA: {{ job.min_cgpa }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Required Industry Skills</h3>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        {% for sk in job.required_skills.all %}
+        <span class="badge badge-success" style="font-size: 0.85rem; padding: 6px 12px;">
+          <i class="fa-solid fa-check"></i> {{ sk.name }}
+        </span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Role & Qualifications Description</h3>
+      <p style="font-size: 0.95rem; color: #334155; line-height: 1.7; white-space: pre-line;">{{ job.description }}</p>
+    </div>
+
+    {% if user.profile.role == 'STUDENT' %}
+    <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px;">
+      {% if has_applied %}
+      <div class="alert alert-info">
+        <span><i class="fa-solid fa-circle-check"></i> You have applied for this position on {{ application.applied_at|date:"M d, Y" }}. Status: <strong>{{ application.get_status_display }}</strong></span>
+      </div>
+      {% else %}
+      <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 12px;">One-Click Application</h3>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Cover Note / Highlights for Recruiter (Optional)</label>
+          <textarea name="cover_note" class="form-control" rows="3" placeholder="Highlight relevant projects or CGPA match..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; font-weight: 700;">
+          <i class="fa-solid fa-paper-plane"></i> Submit Application to {{ job.company_name }}
+        </button>
+      </form>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

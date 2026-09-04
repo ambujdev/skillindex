@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | Skill Index Portal{% endblock %}
+
+{% block auth_content %}
+<div style="width: 100%; max-width: 500px; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(16px); border-radius: 16px; padding: 36px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);">
+  <div style="text-align: center; margin-bottom: 24px;">
+    <h2 style="font-size: 1.5rem; font-weight: 700; color: #0f172a;">Join Skill Index</h2>
+    <p style="font-size: 0.875rem; color: #64748b; margin-top: 4px;">Create your profile for Skill Mapping, Internships & Placements</p>
+  </div>
+
+  <form method="POST" action="{% url 'register' %}">
+    {% csrf_token %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div class="form-group">
+        <label class="form-label">First Name</label>
+        <input type="text" name="first_name" class="form-control" placeholder="Ananya" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last Name</label>
+        <input type="text" name="last_name" class="form-control" placeholder="Sharma" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input type="text" name="username" class="form-control" placeholder="ananya_sharma" required>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input type="email" name="email" class="form-control" placeholder="ananya@university.edu" required>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Select Account Role</label>
+      <select name="role" class="form-control" required>
+        <option value="STUDENT">Student / Job Seeker</option>
+        <option value="INDUSTRY">Industry Partner / Recruiter</option>
+        <option value="ACADEMIA">Academia / Placement Officer</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Institution / Organization Name</label>
+      <input type="text" name="institution_or_company" class="form-control" placeholder="Delhi Technological University / Google" required>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; font-weight: 600; margin-top: 8px;">
+      <i class="fa-solid fa-user-plus"></i> Create Account
+    </button>
+  </form>
+
+  <p style="text-align: center; margin-top: 20px; font-size: 0.85rem; color: #64748b;">
+    Already have an account? <a href="{% url 'login' %}" style="color: #10b981; font-weight: 600; text-decoration: none;">Sign In</a>
+  </p>
+</div>
+{% endblock %}

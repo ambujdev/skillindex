@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Skill Mapping & Gap Analysis | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+  <div>
+    <h1 class="page-title">Skill Mapping & Gap Analysis</h1>
+    <p class="page-subtitle">Map your possessed skill set against live industry demand.</p>
+  </div>
+  <button class="btn btn-primary" data-modal-target="addSkillModal">
+    <i class="fa-solid fa-plus"></i> Add New Skill
+  </button>
+</div>
+
+<div class="grid-2">
+  <!-- My Possessed Skills List -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-check-double" style="color: var(--primary); margin-right: 8px;"></i> My Verified Skills</h3>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      {% for sk in student_skills %}
+      <div style="padding: 12px; background: #f8fafc; border-radius: 10px; border: 1px solid var(--border-color);">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="font-weight: 600; color: #0f172a;">{{ sk.skill.name }}</span>
+          <span class="badge badge-success">{{ sk.get_level_display }} ({{ sk.proficiency_percentage }}%)</span>
+        </div>
+        <div class="skill-bar">
+          <div class="skill-progress progress-green" style="width: {{ sk.proficiency_percentage }}%;"></div>
+        </div>
+      </div>
+      {% empty %}
+      <p style="font-size: 0.875rem; color: var(--text-muted);">No skills added yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Industry Skill Demand & Gap Analysis -->
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title"><i class="fa-solid fa-chart-line" style="color: #3b82f6; margin-right: 8px;"></i> Industry Demand vs Skill Gap</h3>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">Top skills demanded across active job postings and your match status:</p>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      {% for item in skill_gaps %}
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border-radius: 8px; background: {% if item.is_possessed %}#f0fdf4{% else %}#fef2f2{% endif %}; border: 1px solid {% if item.is_possessed %}#bbf7d0{% else %}#fecaca{% endif %};">
+        <div>
+          <span style="font-weight: 600; color: #0f172a;">{{ item.skill.name }}</span>
+          <span style="display: block; font-size: 0.75rem; color: var(--text-muted);">Demanded in {{ item.demand_count }} active postings</span>
+        </div>
+        {% if item.is_possessed %}
+        <span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Acquired</span>
+        {% else %}
+        <span class="badge badge-danger"><i class="fa-solid fa-triangle-exclamation"></i> Gap - Acquire Skill</span>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add Skill -->
+<div class="modal-backdrop" id="addSkillModal">
+  <div class="modal-content">
+    <div class="card-header">
+      <h3 class="card-title">Add / Update Skill</h3>
+      <button class="btn btn-sm btn-outline" data-modal-close>&times;</button>
+    </div>
+    <form method="POST" action="{% url 'skills' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Select Existing Skill</label>
+        <select name="skill_id" class="form-control">
+          <option value="">-- Or enter new skill below --</option>
+          {% for sk in all_skills %}
+          <option value="{{ sk.id }}">{{ sk.name }} ({{ sk.get_category_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Or Custom Skill Name</label>
+        <input type="text" name="new_skill_name" class="form-control" placeholder="e.g. PyTorch, Next.js, Kubernetes">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Proficiency Level (%) <span id="proficiencyVal" style="color: var(--primary); font-weight: 700;">80%</span></label>
+        <input type="range" name="proficiency" id="proficiencyRange" min="10" max="100" value="80" style="width: 100%; accent-color: var(--primary);">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Proficiency Tag</label>
+        <select name="level" class="form-control">
+          <option value="BEGINNER">Beginner</option>
+          <option value="INTERMEDIATE">Intermediate</option>
+          <option value="ADVANCED" selected>Advanced</option>
+          <option value="EXPERT">Expert</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Skill</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

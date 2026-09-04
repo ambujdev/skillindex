@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Welcome, {{ profile.user.first_name|default:profile.user.username }}! 👋</h1>
+  <p class="page-subtitle">Here's your academic and industry skill progress overview.</p>
+</div>
+
+<!-- 4 Key Stat Cards -->
+<div class="grid-4">
+  <div class="stat-card stat-green">
+    <span class="stat-label">CGPA</span>
+    <span class="stat-value">{{ academic.cgpa }}</span>
+    <span class="stat-subtext">out of {{ academic.max_cgpa }}</span>
+  </div>
+
+  <div class="stat-card stat-purple">
+    <span class="stat-label">Internships</span>
+    <span class="stat-value">{{ academic.completed_internships_count }}</span>
+    <span class="stat-subtext">Completed</span>
+  </div>
+
+  <div class="stat-card stat-blue">
+    <span class="stat-label">Skills</span>
+    <span class="stat-value">{{ student_skills.count }}</span>
+    <span class="stat-subtext">Added & Verified</span>
+  </div>
+
+  <div class="stat-card stat-amber">
+    <span class="stat-label">Achievements</span>
+    <span class="stat-value">{{ academic.earned_achievements_count }}</span>
+    <span class="stat-subtext">Earned Badges</span>
+  </div>
+</div>
+
+<!-- Main Dashboard Grid Layout (2-column layout like prompt image Panel 1) -->
+<div class="grid-dashboard">
+  <!-- Left Side: Recent Activity + Internship Details + Profile Preview -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+
+    <!-- Recent Activity Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fa-solid fa-clock-rotate-left" style="color: var(--primary); margin-right: 8px;"></i> Recent Activity</h3>
+      </div>
+      <div class="activity-list">
+        {% for act in recent_activity %}
+        <div class="activity-item">
+          <div class="activity-icon icon-{{ act.color }}">
+            <i class="fa-solid fa-{{ act.icon }}"></i>
+          </div>
+          <div class="activity-content">
+            <span class="activity-title">{{ act.title }}</span>
+            <span class="activity-subtitle">{{ act.subtitle }}</span>
+          </div>
+        </div>
+        {% empty %}
+        <p style="font-size: 0.875rem; color: var(--text-muted);">No recent activities recorded yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Internship Details Card (Matching prompt image Google card) -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fa-solid fa-briefcase" style="color: #3b82f6; margin-right: 8px;"></i> Internship Details</h3>
+        <span class="badge badge-success">Completed</span>
+      </div>
+
+      {% if accepted_internship %}
+      <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px;">
+        <img src="{{ accepted_internship.job.company_logo }}" alt="Company" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain;">
+        <div>
+          <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">{{ accepted_internship.job.company_name }}</h4>
+          <p style="font-size: 0.875rem; font-weight: 600; color: #3b82f6;">{{ accepted_internship.job.title }}</p>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">May 2025 - Jul 2025 • {{ accepted_internship.job.location }}</span>
+        </div>
+      </div>
+
+      <ul style="list-style: disc; margin-left: 20px; font-size: 0.875rem; color: #475569; display: flex; flex-direction: column; gap: 6px;">
+        <li>Worked on real-time computer vision and scalable microservices.</li>
+        <li>Collaborated with international cross-functional engineering teams.</li>
+        <li>Improved system performance by 15% through query optimization.</li>
+      </ul>
+      {% else %}
+      <div style="display: flex; gap: 16px; align-items: flex-start;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" style="width: 44px; height: 44px; border-radius: 8px;">
+        <div>
+          <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">Google India</h4>
+          <p style="font-size: 0.875rem; font-weight: 600; color: #3b82f6;">Software Engineering Intern</p>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">May 2025 - Jul 2025 • Bengaluru</span>
+        </div>
+      </div>
+      <ul style="list-style: disc; margin-left: 20px; font-size: 0.875rem; color: #475569; margin-top: 12px; display: flex; flex-direction: column; gap: 6px;">
+        <li>Worked on real-time scalable projects in cloud engineering.</li>
+        <li>Collaborated with senior engineers on internal API refactoring.</li>
+        <li>Improved system performance and database responsiveness by 15%.</li>
+      </ul>
+      {% endif %}
+    </div>
+
+    <!-- My Profile Preview Card (Matching prompt image bottom-left profile card) -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fa-solid fa-id-card" style="color: #8b5cf6; margin-right: 8px;"></i> My Profile Preview</h3>
+      </div>
+
+      <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+        <img src="{{ profile.avatar_url }}" alt="Profile" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
+        <div>
+          <h3 style="font-size: 1.2rem; font-weight: 700; color: #0f172a;">{{ profile.full_name }}</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">{{ academic.degree }} • {{ profile.institution_or_company }}</p>
+          <p style="font-size: 0.75rem; color: var(--text-muted);"><i class="fa-solid fa-location-dot"></i> {{ profile.location }}</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px; background-color: #f8fafc; padding: 12px; border-radius: 8px; border-left: 3px solid var(--primary);">
+        "{{ profile.bio|default:'Motivated Computer Science student with strong problem-solving skills and passion for building real-world solutions.' }}"
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); text-align: center; gap: 8px; background: #f1f5f9; padding: 12px; border-radius: 10px; margin-bottom: 20px;">
+        <div>
+          <span style="display: block; font-size: 1.2rem; font-weight: 800; color: #0f172a;">{{ academic.completed_internships_count }}</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Internships</span>
+        </div>
+        <div>
+          <span style="display: block; font-size: 1.2rem; font-weight: 800; color: #0f172a;">{{ student_skills.count }}</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Skills</span>
+        </div>
+        <div>
+          <span style="display: block; font-size: 1.2rem; font-weight: 800; color: #0f172a;">{{ projects.count }}</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Projects</span>
+        </div>
+        <div>
+          <span style="display: block; font-size: 1.2rem; font-weight: 800; color: #0f172a;">{{ certificates.count }}</span>
+          <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Certificates</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px;">
+        <a href="{% url 'resume' %}" class="btn btn-outline" style="flex: 1; border-color: var(--primary); color: var(--primary);">
+          <i class="fa-solid fa-download"></i> Download Resume
+        </a>
+        <a href="{% url 'profile' %}" class="btn btn-primary" style="flex: 1;">
+          <i class="fa-solid fa-share-nodes"></i> Share Profile
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Side: Top Skills Card -->
+  <div style="display: flex; flex-direction: column; gap: 24px;">
+
+    <!-- Skills Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fa-solid fa-bolt" style="color: var(--warning); margin-right: 8px;"></i> Skills Progress</h3>
+        <button class="btn btn-sm btn-outline" data-modal-target="addSkillModal">
+          <i class="fa-solid fa-plus"></i> Add Skill
+        </button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        {% for sk in top_skills %}
+        <div class="skill-item">
+          <div class="skill-header">
+            <span>{{ sk.skill.name }}</span>
+            <span style="color: var(--primary); font-weight: 700;">{{ sk.proficiency_percentage }}%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-progress progress-green" style="width: {{ sk.proficiency_percentage }}%;"></div>
+          </div>
+        </div>
+        {% empty %}
+        <p style="font-size: 0.875rem; color: var(--text-muted);">No skills added yet. Click "+ Add Skill" to start mapping your skills.</p>
+        {% endfor %}
+      </div>
+
+      <a href="{% url 'skills' %}" class="btn btn-block btn-outline" style="margin-top: 20px; font-size: 0.85rem;">
+        View Full Skill Mapping & Industry Gaps <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Quick Opportunities Spotlight Card -->
+    <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white;">
+      <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px;">Target Skill Recommendation</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 16px;">Industry demands PostgreSQL & Django for top backend roles. Elevate your proficiency to unlock 4+ open placement drives!</p>
+      <a href="{% url 'job_list' %}" class="btn btn-primary btn-block">
+        <i class="fa-solid fa-magnifying-glass"></i> Explore Matching Opportunities
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal: Add Skill -->
+<div class="modal-backdrop" id="addSkillModal">
+  <div class="modal-content">
+    <div class="card-header">
+      <h3 class="card-title">Add / Update Skill</h3>
+      <button class="btn btn-sm btn-outline" data-modal-close>&times;</button>
+    </div>
+    <form method="POST" action="{% url 'skills' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Select Existing Skill</label>
+        <select name="skill_id" class="form-control">
+          <option value="">-- Or enter new skill below --</option>
+          {% for sk in all_skills %}
+          <option value="{{ sk.id }}">{{ sk.name }} ({{ sk.get_category_display }})</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Or Custom Skill Name</label>
+        <input type="text" name="new_skill_name" class="form-control" placeholder="e.g. Docker, React, PyTorch">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Proficiency Level (%) <span id="proficiencyVal" style="color: var(--primary); font-weight: 700;">80%</span></label>
+        <input type="range" name="proficiency" id="proficiencyRange" min="10" max="100" value="80" style="width: 100%; accent-color: var(--primary);">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Proficiency Tag</label>
+        <select name="level" class="form-control">
+          <option value="BEGINNER">Beginner</option>
+          <option value="INTERMEDIATE">Intermediate</option>
+          <option value="ADVANCED" selected>Advanced</option>
+          <option value="EXPERT">Expert</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+        <button type="button" class="btn btn-outline" data-modal-close>Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Skill</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

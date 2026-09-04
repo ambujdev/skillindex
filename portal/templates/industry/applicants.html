@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Applicant Pipeline | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-title">Applicant Management Pipeline</h1>
+  <p class="page-subtitle">Review student applicants, assess CGPA & verified skill match, and update application status.</p>
+</div>
+
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">
+      <i class="fa-solid fa-users-viewfinder" style="color: var(--primary); margin-right: 8px;"></i>
+      {% if job %}Applicants for {{ job.title }} ({{ job.company_name }}){% else %}All Received Applications{% endif %}
+    </h3>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    {% for app in applications %}
+    <div style="padding: 16px; border-radius: 12px; background: #f8fafc; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+      <div style="display: flex; gap: 16px; align-items: flex-start;">
+        <img src="{{ app.student.avatar_url }}" alt="Student Avatar" style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">
+        <div>
+          <h4 style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">{{ app.student.full_name }}</h4>
+          <p style="font-size: 0.85rem; color: #3b82f6; font-weight: 600;">
+            {{ app.student.institution_or_company }} • Degree: {{ app.student.academic_record.degree|default:'B.Tech CS' }}
+          </p>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">
+            CGPA: <strong>{{ app.student.academic_record.cgpa|default:'8.76' }}</strong> / 10 | Role Applied: <strong>{{ app.job.title }}</strong>
+          </span>
+
+          {% if app.cover_note %}
+          <p style="font-size: 0.85rem; color: #475569; margin-top: 8px; font-style: italic; background: #ffffff; padding: 8px 12px; border-radius: 6px; border-left: 3px solid #3b82f6;">
+            Note: "{{ app.cover_note }}"
+          </p>
+          {% endif %}
+
+          <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
+            {% for sk in app.student.student_skills.all %}
+            <span class="badge badge-success" style="font-size: 0.7rem;">{{ sk.skill.name }} ({{ sk.proficiency_percentage }}%)</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Box -->
+      <div style="min-width: 240px; background: white; padding: 14px; border-radius: 10px; border: 1px solid var(--border-color);">
+        <form method="POST" action="{% url 'applicants' %}">
+          {% csrf_token %}
+          <input type="hidden" name="application_id" value="{{ app.id }}">
+          
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label class="form-label" style="font-size: 0.75rem;">Application Status</label>
+            <select name="status" class="form-control" style="padding: 6px 10px; font-size: 0.8rem;">
+              <option value="APPLIED" {% if app.status == 'APPLIED' %}selected{% endif %}>Applied</option>
+              <option value="UNDER_REVIEW" {% if app.status == 'UNDER_REVIEW' %}selected{% endif %}>Under Review</option>
+              <option value="INTERVIEW" {% if app.status == 'INTERVIEW' %}selected{% endif %}>Schedule Interview</option>
+              <option value="ACCEPTED" {% if app.status == 'ACCEPTED' %}selected{% endif %}>Accept / Offer</option>
+              <option value="REJECTED" {% if app.status == 'REJECTED' %}selected{% endif %}>Not Shortlisted</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 10px;">
+            <input type="text" name="recruiter_notes" class="form-control" placeholder="Feedback/Notes for student" value="{{ app.recruiter_notes }}" style="padding: 6px 10px; font-size: 0.8rem;">
+          </div>
+
+          <button type="submit" class="btn btn-sm btn-primary btn-block">
+            <i class="fa-solid fa-sync"></i> Update Status
+          </button>
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <p style="font-size: 0.875rem; color: var(--text-muted);">No applications received yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+2026-09-04 07:50:05.689 IST [10842] LOG:  starting PostgreSQL 17.10 on x86_64-pc-linux-gnu, compiled by clang version 21.1.8, 64-bit
+2026-09-04 07:50:05.689 IST [10842] LOG:  listening on IPv6 address "::1", port 5433
+2026-09-04 07:50:05.689 IST [10842] LOG:  listening on IPv4 address "127.0.0.1", port 5433
+2026-09-04 07:50:05.691 IST [10842] LOG:  listening on Unix socket "/home/focus/Projects/SkillIndex/testdb/.s.PGSQL.5433"
+2026-09-04 07:50:05.695 IST [10845] LOG:  database system was shut down at 2026-09-04 07:50:05 IST
+2026-09-04 07:50:05.699 IST [10842] LOG:  database system is ready to accept connections
+2026-09-04 07:50:07.777 IST [10852] FATAL:  database "focus" does not exist
+2026-09-04 07:50:07.781 IST [10842] LOG:  received SIGHUP, reloading configuration files
+2026-09-04 07:53:18.823 IST [10842] LOG:  received smart shutdown request
+2026-09-04 07:53:18.825 IST [10842] LOG:  background worker "logical replication launcher" (PID 10848) exited with exit code 1
+2026-09-04 07:53:18.826 IST [10843] LOG:  shutting down
+2026-09-04 07:53:18.827 IST [10843] LOG:  checkpoint starting: shutdown immediate
+2026-09-04 07:53:18.845 IST [10843] LOG:  checkpoint complete: wrote 46 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.007 s, sync=0.007 s, total=0.020 s; sync files=11, longest=0.002 s, average=0.001 s; distance=269 kB, estimate=269 kB; lsn=0/15305F8, redo lsn=0/15305F8
+2026-09-04 07:53:18.853 IST [10842] LOG:  database system is shut down

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Opportunity Catalog | Skill Index{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+  <div>
+    <h1 class="page-title">Internships & Placement Drives</h1>
+    <p class="page-subtitle">Discover opportunities matching your academic CGPA & verified skill set.</p>
+  </div>
+  {% if user.profile.role == 'INDUSTRY' %}
+  <a href="{% url 'job_create' %}" class="btn btn-primary">
+    <i class="fa-solid fa-plus"></i> Post Opportunity
+  </a>
+  {% endif %}
+</div>
+
+<!-- Filters -->
+<div class="card" style="margin-bottom: 24px; padding: 16px;">
+  <form method="GET" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 250px;">
+      <input type="text" name="q" class="form-control" placeholder="Search title, company, or required skill (e.g. Python, SQL)" value="{{ query }}">
+    </div>
+    <div style="width: 200px;">
+      <select name="type" class="form-control">
+        <option value="">All Opportunity Types</option>
+        <option value="INTERNSHIP" {% if opportunity_type == 'INTERNSHIP' %}selected{% endif %}>Internship</option>
+        <option value="FULL_TIME" {% if opportunity_type == 'FULL_TIME' %}selected{% endif %}>Full Time Placement</option>
+        <option value="PROJECT" {% if opportunity_type == 'PROJECT' %}selected{% endif %}>Industry Project</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-filter"></i> Filter</button>
+  </form>
+</div>
+
+<!-- Opportunities Grid -->
+<div class="grid-2">
+  {% for job in jobs %}
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <img src="{{ job.company_logo }}" alt="Company" style="width: 44px; height: 44px; border-radius: 8px; object-fit: contain;">
+          <div>
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">{{ job.title }}</h3>
+            <p style="font-size: 0.875rem; color: #3b82f6; font-weight: 600;">{{ job.company_name }}</p>
+          </div>
+        </div>
+        <span class="badge badge-info">{{ job.get_opportunity_type_display }}</span>
+      </div>
+
+      <div style="display: flex; gap: 16px; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
+        <span><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+        <span><i class="fa-solid fa-money-bill-wave"></i> {{ job.stipend_or_salary }}</span>
+        <span><i class="fa-solid fa-graduation-cap"></i> Min CGPA: {{ job.min_cgpa }}</span>
+      </div>
+
+      <p style="font-size: 0.85rem; color: #475569; margin-bottom: 14px; line-clamp: 2; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+        {{ job.description }}
+      </p>
+
+      <div style="margin-bottom: 16px; display: flex; gap: 6px; flex-wrap: wrap;">
+        {% for sk in job.required_skills.all %}
+        <span class="badge badge-secondary" style="font-size: 0.75rem;">{{ sk.name }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 12px;">
+      <span style="font-size: 0.75rem; color: var(--text-muted);">Deadline: {{ job.deadline|date:"M d, Y" }}</span>
+      <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-outline">
+        View & Apply <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+  {% empty %}
+  <div style="grid-column: 1 / -1;" class="card">
+    <p style="text-align: center; color: var(--text-muted); padding: 20px;">No opportunities found matching your criteria.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
