@@ -1,1 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database directories & local database files
 .pg_data/
+testdb/
+*.sqlite3
+*.log
+
+# Environments & IDEs
+.env
+.venv
+env/
+venv/
+ENV/
+.vscode/
+.idea/
+
+# Media and static build artifacts (optional / generated)
+staticfiles/
+media/
