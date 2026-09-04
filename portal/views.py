@@ -254,7 +254,10 @@ def profile_view(request):
         profile.phone = request.POST.get('phone', profile.phone)
         profile.institution_or_company = request.POST.get('institution_or_company', profile.institution_or_company)
         profile.department = request.POST.get('department', profile.department)
+        profile.branch_and_year = request.POST.get('branch_and_year', profile.branch_and_year)
         profile.location = request.POST.get('location', profile.location)
+        profile.linkedin_url = request.POST.get('linkedin_url', profile.linkedin_url)
+        profile.github_url = request.POST.get('github_url', profile.github_url)
         if request.POST.get('avatar_url'):
             profile.avatar_url = request.POST.get('avatar_url')
         profile.save()

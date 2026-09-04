@@ -37,13 +37,16 @@ APPLICATION_STATUS_CHOICES = (
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='STUDENT')
-    phone = models.CharField(max_length=20, blank=True, null=True)
-    bio = models.TextField(blank=True, default='')
-    institution_or_company = models.CharField(max_length=150, blank=True, default='')
-    department = models.CharField(max_length=100, blank=True, default='')
+    phone = models.CharField(max_length=20, blank=True, default='+91 98765 43210')
+    bio = models.TextField(blank=True, default='Passionate Computer Science student specializing in Full-Stack Development and AI Systems.')
+    institution_or_company = models.CharField(max_length=150, blank=True, default='Delhi Technological University')
+    department = models.CharField(max_length=100, blank=True, default='Computer Science & Engineering')
+    branch_and_year = models.CharField(max_length=100, blank=True, default='B.Tech CSE • 4th Year')
     designation = models.CharField(max_length=100, blank=True, default='')
     location = models.CharField(max_length=100, blank=True, default='Delhi, India')
     avatar_url = models.CharField(max_length=255, blank=True, default='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80')
+    linkedin_url = models.CharField(max_length=255, blank=True, default='https://linkedin.com/in/ananyasharma')
+    github_url = models.CharField(max_length=255, blank=True, default='https://github.com/ananyasharma')
 
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} ({self.role})"
@@ -74,7 +77,7 @@ class Skill(models.Model):
 class StudentSkill(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='student_skills')
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    proficiency_percentage = models.IntegerField(default=80) # 0 to 100
+    proficiency_percentage = models.IntegerField(default=80)
     level = models.CharField(max_length=20, choices=PROFICIENCY_LEVELS, default='ADVANCED')
     verified_by_academia = models.BooleanField(default=True)
 
