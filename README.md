@@ -8,22 +8,26 @@
 **To be uploaded**
 
 # Features / Tabs 
-Dashboard
-Profile
-Academic
-Internship
-Skills
-Projects
-Certificate
-Achievement
-Certificate
-Coding Profile
-Activity
+Dashboard - Overview of all relavent information
 
+Profile - Student Profile for viewing and editing
 
-# Actions
-Generate CV
-Settings 
-Generate Resume
-Notification History
+Academic - Academic info of student
+
+Internship & Placement - Opportunities to apply for
+
+Skills - Skill set of student
+
+Projects - Project student have worked on
+
+Achievement - Achievment of student in academics, competetions, etc
+
+Coding Profile - Coding history on leetcode, codeforces, etc
+
+Activity - Summary of activities, changes , notifications , etc
+
+Career Documents - CV and Resume builder
+
+Settings - Option to change settings in portal
+
 

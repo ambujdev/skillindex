@@ -41,22 +41,17 @@
         </li>
         <li>
           <a href="{% url 'job_list' %}" class="nav-item {% if request.resolver_match.url_name == 'job_list' or request.resolver_match.url_name == 'job_detail' %}active{% endif %}">
-            <i class="fa-solid fa-briefcase"></i> Int. & Placement
+            <i class="fa-solid fa-briefcase"></i> Internship & Placement
           </a>
         </li>
         <li>
           <a href="{% url 'skills' %}" class="nav-item {% if request.resolver_match.url_name == 'skills' %}active{% endif %}">
-            <i class="fa-solid fa-sliders"></i> Skill
-          </a>
-        </li>
-        <li>
-          <a href="{% url 'resume' %}" class="nav-item {% if request.resolver_match.url_name == 'resume' %}active{% endif %}">
-            <i class="fa-solid fa-code"></i> Project
+            <i class="fa-solid fa-sliders"></i> Skills
           </a>
         </li>
         <li>
           <a href="{% url 'resume' %}" class="nav-item">
-            <i class="fa-solid fa-award"></i> Certificate
+            <i class="fa-solid fa-code"></i> Projects
           </a>
         </li>
         <li>
@@ -65,13 +60,23 @@
           </a>
         </li>
         <li>
-          <a href="{% url 'my_applications' %}" class="nav-item {% if request.resolver_match.url_name == 'my_applications' %}active{% endif %}">
+          <a href="{% url 'profile' %}" class="nav-item">
             <i class="fa-solid fa-laptop-code"></i> Coding Profile
           </a>
         </li>
         <li>
-          <a href="{% url 'dashboard' %}" class="nav-item">
+          <a href="{% url 'my_applications' %}" class="nav-item {% if request.resolver_match.url_name == 'my_applications' %}active{% endif %}">
             <i class="fa-solid fa-clock-rotate-left"></i> Activity
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'resume' %}" class="nav-item {% if request.resolver_match.url_name == 'resume' %}active{% endif %}">
+            <i class="fa-solid fa-file-lines"></i> Career Documents
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'profile' %}" class="nav-item">
+            <i class="fa-solid fa-gear"></i> Settings
           </a>
         </li>
         {% endif %}
