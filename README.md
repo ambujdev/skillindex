@@ -7,7 +7,8 @@
 # Homepage
 **To be uploaded**
 
-# Features / Tabs 
+# Features
+## Student Portal
 Dashboard - Overview of all relavent information
 
 Profile - Student Profile for viewing and editing
