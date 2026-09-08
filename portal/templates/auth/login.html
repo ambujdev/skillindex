@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login | Skill Index Portal{% endblock %}
 
@@ -7,9 +8,7 @@
   
   <!-- Brand Logo & Header -->
   <div style="text-align: center; margin-bottom: 28px;">
-    <div style="width: 52px; height: 52px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center; color: #ffffff; font-size: 1.5rem; margin-bottom: 12px; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);">
-      <i class="fa-solid fa-layer-group"></i>
-    </div>
+    <img src="{% static 'images/logo.png' %}" alt="Skill Index Logo" width="56" height="56" style="width: 56px; height: 56px; max-width: 56px; max-height: 56px; border-radius: 14px; object-fit: contain; margin-bottom: 12px; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08); display: inline-block;">
     <h2 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 0; letter-spacing: -0.02em;">Skill Index Portal</h2>
     <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px; font-weight: 500;">Academia-Industry Collaboration & Placement Portal</p>
   </div>

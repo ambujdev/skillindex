@@ -90,17 +90,18 @@ body {
   letter-spacing: -0.02em;
 }
 
-.sidebar-brand .logo-icon {
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(135deg, #6366f1, #818cf8);
+.sidebar-brand img,
+.sidebar-brand .logo-icon,
+.sidebar-brand .sidebar-logo {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
   border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  color: white;
-  font-size: 1rem;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
 
 .sidebar-menu {
